@@ -12,12 +12,25 @@
  */
 
 #import <UIKit/UIKit.h>
-@class PSSlideUPPickerTest;
+#import "PSSlideUPPicker.h"
 
-@interface CustomPickerViewAppDelegate : NSObject <UIApplicationDelegate> {
-    PSSlideUPPickerTest *test;
+@interface PSSlideUPPickerTest : UIViewController <PSSlideUPPickerDelegate> {
+    IBOutlet UIButton *button;
+    IBOutlet UIButton *componentButton;
+    
+    PSSlideUPPicker *picker;
+    
+    NSInteger indexForPickerWithOneComponent;
+    NSMutableArray *indexesForPickerWithMultipleComponents;
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) UIButton *button;
+@property (nonatomic, retain) UIButton *componentButton;
+
+@property (nonatomic, retain) PSSlideUPPicker *picker;
+@property (nonatomic, assign) NSInteger indexForPickerWithOneComponent;
+@property (nonatomic, retain) NSMutableArray *indexesForPickerWithMultipleComponents;
+
+- (IBAction)openPicker:(id)sender;
 
 @end
