@@ -157,7 +157,7 @@
             [UIView setAnimationDuration:0.4f];
             [UIView setAnimationDelegate:self];
             [UIView setAnimationDidStopSelector:@selector(animationCompleted)];
-            self.slideUpView.backgroundColor = PSAnimationColorAnimated;
+            self.slideUpView.backgroundColor = PSAnimationColorInitial;
             self.pickerView.frame = pickerViewFrameHidden;
             self.toolBar.frame = toolBarFrameHidden;
             [UIView commitAnimations];	
