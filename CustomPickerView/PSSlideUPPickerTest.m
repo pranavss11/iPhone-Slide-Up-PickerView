@@ -96,7 +96,7 @@
 }
 
 - (IBAction)openDatePicker:(id)sender {
-    picker = [[PSSlideUPPicker alloc] initWithDatePickerforView:self.view delegate:self withSelectedDate:self.selectedDate andDatePickerMode:UIDatePickerModeDate];
+    picker = [[PSSlideUPPicker alloc] initWithDatePickerforView:self.view delegate:self withSelectedDate:self.selectedDate andDatePickerMode:UIDatePickerModeDateAndTime];
     [picker showPSPicker];
 }
 

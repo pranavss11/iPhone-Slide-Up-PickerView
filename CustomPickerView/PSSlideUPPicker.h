@@ -36,22 +36,6 @@ typedef enum {
     UIView *slideUpView; 
     UIPickerView *pickerView; //Added to slideUpView
     UIToolbar *toolBar;
-    
-    NSArray *pickerData;
-    
-    BOOL pickerHasMultipleComponents; 
-    BOOL isDatePicker;
-    NSInteger numberOfPickerComponents;
-    
-    NSInteger selectedIndex; //Used when only one component in picker.
-    NSArray *selectedIndexes; //Used for multiple components in picker. Contains NSNumber objects.
-    
-    PSAnimationType animationType;
-    
-    UIDatePicker *datePicker;
-    UIDatePickerMode datePickerMode;
-    NSDate *selectedDate;
-    
 }
 
 @property (nonatomic, assign) id<PSSlideUPPickerDelegate> delegate;
