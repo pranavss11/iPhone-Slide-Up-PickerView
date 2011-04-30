@@ -40,12 +40,18 @@ typedef enum {
     NSArray *pickerData;
     
     BOOL pickerHasMultipleComponents; 
+    BOOL isDatePicker;
     NSInteger numberOfPickerComponents;
     
     NSInteger selectedIndex; //Used when only one component in picker.
     NSArray *selectedIndexes; //Used for multiple components in picker. Contains NSNumber objects.
     
     PSAnimationType animationType;
+    
+    UIDatePicker *datePicker;
+    UIDatePickerMode datePickerMode;
+    NSDate *selectedDate;
+    
 }
 
 @property (nonatomic, assign) id<PSSlideUPPickerDelegate> delegate;
@@ -59,6 +65,7 @@ typedef enum {
 
 @property (nonatomic, assign) NSInteger numberOfPickerComponents;
 @property (nonatomic, assign) BOOL pickerHasMultipleComponents;
+@property (nonatomic, assign) BOOL isDatePicker;
 
 @property (nonatomic, assign) NSInteger selectedIndex;
 
@@ -67,6 +74,10 @@ typedef enum {
 @property (nonatomic, retain) NSArray *selectedIndexes;
 
 @property (nonatomic, assign) PSAnimationType animationType;
+
+@property (nonatomic, assign) UIDatePickerMode datePickerMode;
+@property (nonatomic, retain) UIDatePicker *datePicker;
+@property (nonatomic, retain) NSDate *selectedDate;
 
 /*
  Used for Regular pickers with just one component. 
@@ -80,6 +91,10 @@ typedef enum {
  */
 - (id)initWithMultipleComponents:(NSInteger)totalComponents withPickerData:(NSArray *)data forView:(UIView *)theView delegate:(id)del withSelectedIndexes:(NSArray *)indexes;
 /*
+ Date Picker
+ */
+- (id)initWithDatePickerforView:(UIView *)theView delegate:(id)del withSelectedDate:(NSDate *)date andDatePickerMode:(UIDatePickerMode)mode;
+/*
  Always should be called after initialization to show the picker.
  */
 - (void)showPSPicker;
@@ -92,4 +107,5 @@ typedef enum {
 - (void)didSelectIndex:(NSInteger)selectedIndex forComponent:(NSInteger)component;
 - (void)didSelectData:(id)selectedData;
 - (void)didSelectData:(id)selectedData forComponent:(NSInteger)component;
+- (void)didSelectDate:(NSDate *)date;
 @end

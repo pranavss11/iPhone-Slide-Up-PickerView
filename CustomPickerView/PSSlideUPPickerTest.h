@@ -31,6 +31,7 @@
     
     NSInteger indexForPickerWithOneComponent;
     NSMutableArray *indexesForPickerWithMultipleComponents;
+    NSDate *selectedDate;
 }
 
 @property (nonatomic, retain) UIButton *button;
@@ -39,7 +40,10 @@
 @property (nonatomic, retain) PSSlideUPPicker *picker;
 @property (nonatomic, assign) NSInteger indexForPickerWithOneComponent;
 @property (nonatomic, retain) NSMutableArray *indexesForPickerWithMultipleComponents;
+@property (nonatomic, retain) NSDate *selectedDate;
 
 - (IBAction)openPicker:(id)sender;
+- (IBAction)openMultipleComponentPicker:(id)sender;
+- (IBAction)openDatePicker:(id)sender;
 
 @end

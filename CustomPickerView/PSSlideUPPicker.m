@@ -46,6 +46,7 @@
 @synthesize delegatesView;
 @synthesize pickerData;
 @synthesize pickerView;
+@synthesize datePicker;
 @synthesize slideUpView;
 @synthesize toolBar;
 @synthesize numberOfPickerComponents;
@@ -53,6 +54,9 @@
 @synthesize animationType;
 @synthesize selectedIndex;
 @synthesize selectedIndexes;
+@synthesize datePickerMode;
+@synthesize isDatePicker;
+@synthesize selectedDate;
 
 #pragma mark - Memory Management 
 - (void)dealloc {
@@ -62,6 +66,8 @@
     [self.delegatesView release];
     [self.selectedIndexes release];
     [self.toolBar release];
+    [self.datePicker release];
+    [self.selectedDate release];
     
     self.pickerView.delegate = nil;
     self.pickerView.dataSource = nil;
@@ -94,30 +100,51 @@
         self.selectedIndexes = [NSArray arrayWithArray:indexes];
     }
     return self;
+} 
+
+- (id)initWithDatePickerforView:(UIView *)theView delegate:(id)del withSelectedDate:(NSDate *)date andDatePickerMode:(UIDatePickerMode)mode {
+    if(self == [super init]) {
+        self.delegatesView = theView;
+        self.delegate = del;
+        self.datePickerMode = mode;
+        self.selectedDate = date;
+        self.isDatePicker = YES;
+    }
+    return self;
 }
 
 #pragma mark - Picker Controls
 - (void)showPSPicker {
     self.slideUpView = [[UIView alloc] initWithFrame:slideUPViewFrame];
     
-    self.pickerView = [[UIPickerView alloc] initWithFrame:pickerViewFrameHidden];
-    self.pickerView.delegate = self;
-    self.pickerView.dataSource = self;
-    self.pickerView.showsSelectionIndicator = YES;
-    
-    if(!pickerHasMultipleComponents) {
-        [self.pickerView selectRow:selectedIndex inComponent:0 animated:NO];
-    } 
-    else {
-        for(NSInteger i = 0; i < [selectedIndexes count]; i ++) {
-            [self.pickerView selectRow:[[selectedIndexes objectAtIndex:i] intValue] inComponent:i animated:NO];
+    if(!isDatePicker) {
+        self.pickerView = [[UIPickerView alloc] initWithFrame:pickerViewFrameHidden];
+        self.pickerView.delegate = self;
+        self.pickerView.dataSource = self;
+        self.pickerView.showsSelectionIndicator = YES;
+        
+        if(!pickerHasMultipleComponents) {
+            [self.pickerView selectRow:selectedIndex inComponent:0 animated:NO];
+        } 
+        else {
+            for(NSInteger i = 0; i < [selectedIndexes count]; i ++) {
+                [self.pickerView selectRow:[[selectedIndexes objectAtIndex:i] intValue] inComponent:i animated:NO];
+            }
         }
+        
+        [self.slideUpView addSubview:self.pickerView];
+        [self.pickerView release];
+    }
+    else {
+        self.datePicker = [[UIDatePicker alloc] initWithFrame:pickerViewFrameHidden];
+        [self.datePicker setDatePickerMode:self.datePickerMode];
+        [self.datePicker setDate:self.selectedDate animated:YES];
+        [self.slideUpView addSubview:self.datePicker];
+        [self.datePicker release];
     }
     
     [self createToolBar];
     [self.slideUpView addSubview:self.toolBar];
-    [self.slideUpView addSubview:self.pickerView];
-    [self.pickerView release];
     [self.toolBar release];
 
     [self performAnimation:PSAnimationSlideUp];
@@ -126,15 +153,32 @@
 - (void)createToolBar {
     self.toolBar = [[UIToolbar alloc] initWithFrame:toolBarFrameHidden];
     self.toolBar.barStyle = UIBarStyleBlackTranslucent;
+    NSArray *toolBarItems;
     
     UIBarButtonItem *cancelBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(cancelPicker)];
-    NSArray *toolBarItems = [NSArray arrayWithObject:cancelBarButton];
+    
+    toolBarItems = [NSArray arrayWithObject:cancelBarButton];
+    
+    if(isDatePicker) {
+        UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(doneWithPicker)];
+        toolBarItems = [NSArray arrayWithObjects:cancelBarButton, spacer, doneBarButton, nil];
+        [spacer release];
+        [doneBarButton release];
+    }
+    
     [cancelBarButton release];
     [toolBar setItems:toolBarItems];
 }
 
 - (void)cancelPicker {
     [self performAnimation:PSAnimationSlideDown];
+}
+
+- (void)doneWithPicker {
+    [self performAnimation:PSAnimationSlideDown];
+    if([self.delegate respondsToSelector:@selector(didSelectDate:)])
+        [self.delegate didSelectDate:[self.datePicker date]];
 }
 
 #pragma mark View Animation
@@ -148,7 +192,10 @@
             [UIView setAnimationDuration:0.4f];
             [UIView setAnimationDelegate:self];
             self.slideUpView.backgroundColor = PSAnimationColorAnimated;
-            self.pickerView.frame = pickerViewFrame;
+            if(isDatePicker)
+                self.datePicker.frame = pickerViewFrame;
+            else
+                self.pickerView.frame = pickerViewFrame;
             self.toolBar.frame = toolBarFrame;
             [UIView commitAnimations];	
             break;
@@ -158,7 +205,10 @@
             [UIView setAnimationDelegate:self];
             [UIView setAnimationDidStopSelector:@selector(animationCompleted)];
             self.slideUpView.backgroundColor = PSAnimationColorInitial;
-            self.pickerView.frame = pickerViewFrameHidden;
+            if(isDatePicker)
+                self.datePicker.frame = pickerViewFrameHidden;
+            else 
+                self.pickerView.frame = pickerViewFrameHidden;
             self.toolBar.frame = toolBarFrameHidden;
             [UIView commitAnimations];	
             break;   

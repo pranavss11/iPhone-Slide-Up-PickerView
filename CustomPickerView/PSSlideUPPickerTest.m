@@ -32,12 +32,14 @@
 @synthesize picker;
 @synthesize indexForPickerWithOneComponent;
 @synthesize indexesForPickerWithMultipleComponents;
+@synthesize selectedDate;
 
 - (void)dealloc
 {
     [self.button release];
     [self.componentButton release];
     [self.picker release];
+    [self.selectedDate release];
     [super dealloc];
 }
 
@@ -67,6 +69,7 @@
     indexesForPickerWithMultipleComponents = [[NSMutableArray alloc] init];
     [indexesForPickerWithMultipleComponents addObject:[NSNumber numberWithInt:0]];
     [indexesForPickerWithMultipleComponents addObject:[NSNumber numberWithInt:0]];
+    self.selectedDate = [NSDate date];
 }
 
 - (IBAction)openMultipleComponentPicker:(id)sender {
@@ -92,6 +95,11 @@
     [comp release];
 }
 
+- (IBAction)openDatePicker:(id)sender {
+    picker = [[PSSlideUPPicker alloc] initWithDatePickerforView:self.view delegate:self withSelectedDate:self.selectedDate andDatePickerMode:UIDatePickerModeDate];
+    [picker showPSPicker];
+}
+
 - (void)didSelectData:(id)selectedData {
     NSLog(@"Data %@", selectedData);
 }
@@ -108,6 +116,11 @@
 
 - (void)didSelectData:(id)selectedData forComponent:(NSInteger)component {
     NSLog(@"Data %@ %i", selectedData, component);
+}
+
+- (void)didSelectDate:(NSDate *)date {
+    NSLog(@"Date %@", date);
+    self.selectedDate = date;
 }
 
 @end
