@@ -137,6 +137,7 @@
     }
     else {
         self.datePicker = [[UIDatePicker alloc] initWithFrame:pickerViewFrameHidden];
+        [self.datePicker addTarget:self action:@selector(datePickerDidSelectDate) forControlEvents:UIControlEventValueChanged];
         [self.datePicker setDatePickerMode:self.datePickerMode];
         [self.datePicker setDate:self.selectedDate animated:YES];
         [self.slideUpView addSubview:self.datePicker];
@@ -159,27 +160,12 @@
     
     toolBarItems = [NSArray arrayWithObject:cancelBarButton];
     
-    if(isDatePicker) {
-        UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(doneWithPicker)];
-        toolBarItems = [NSArray arrayWithObjects:cancelBarButton, spacer, doneBarButton, nil];
-        [spacer release];
-        [doneBarButton release];
-    }
-    
     [cancelBarButton release];
     [toolBar setItems:toolBarItems];
 }
 
 - (void)cancelPicker {
     [self performAnimation:PSAnimationSlideDown];
-    [self release];
-}
-
-- (void)doneWithPicker {
-    [self performAnimation:PSAnimationSlideDown];
-    if([self.delegate respondsToSelector:@selector(didSelectDate:)])
-        [self.delegate didSelectDate:[self.datePicker date]];
     [self release];
 }
 
@@ -225,6 +211,11 @@
 }
 
 #pragma mark - Picker View Delegate
+- (void)datePickerDidSelectDate {
+    if([self.delegate respondsToSelector:@selector(didSelectDate:)])
+        [self.delegate didSelectDate:[self.datePicker date]];
+}
+
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     //Update delegates
     if(!pickerHasMultipleComponents) {
