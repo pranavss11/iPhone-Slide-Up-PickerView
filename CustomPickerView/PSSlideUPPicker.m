@@ -173,12 +173,14 @@
 
 - (void)cancelPicker {
     [self performAnimation:PSAnimationSlideDown];
+    [self release];
 }
 
 - (void)doneWithPicker {
     [self performAnimation:PSAnimationSlideDown];
     if([self.delegate respondsToSelector:@selector(didSelectDate:)])
         [self.delegate didSelectDate:[self.datePicker date]];
+    [self release];
 }
 
 #pragma mark View Animation
