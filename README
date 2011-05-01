@@ -1,0 +1,5 @@
+A Picker that slides up on top of your current view using UIView animation. 
+
+The PSSlideUPPicker is built as a helper class to help anyone deploy a pop up/slide up picker with minimal effort. It current supports multiple components (Unlimited), a simple one component picker and also a date picker. Please contact me directly if anyone would like to see any extra features/improvements baked into this helper class - I don't guarantee that I will add it in, but I will try my best if I have some time.
+
+NOTE: Supports Portrait Mode Only. Please use PSSlideUPPickerTest as a ROUGH guideline on how to implement it - I just threw something together in a couple of minutes to make sure it works as I want it to.
